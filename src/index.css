@@ -1,13 +1,74 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-image:url("https://res.cloudinary.com/dmimages/image/upload/v1709140830/pintura-lago-montana-montana-al-fondo_it9vcl.jpg")}
+
+/* Estructura básica para las columnas */
+.board {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  gap: 20px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.column {
+  background-color: #f4f4f4;
+  width: 30%;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.column h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Estilo para las tarjetas */
+.card {
+  background-color: white;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}
+
+.card-header {
+  font-weight: bold;
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.card textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin-top: 5px;
+  resize: none;
+}
+
+/* Efecto visual de las tarjetas cuando están siendo arrastradas */
+.card[aria-grabbed="true"] {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* Estilo para las columnas al ser arrastradas */
+.column {
+  min-height: 400px;
+  background-color: #fafafa;
+  padding: 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.column:hover {
+  background-color: #f0f0f0;
+}
+
+/* Efectos visuales de los contenedores cuando se arrastra dentro de ellos */
+.droppable-over {
+  background-color: #e0f7fa;
 }
