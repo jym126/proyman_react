@@ -110,7 +110,6 @@
   transition: opacity 0.3s ease;
 }
 
-
 /* Estilo para el modal */
 .modal-overlay {
   position: fixed;
@@ -163,4 +162,61 @@
 
 .modal-btn:hover {
   background-color: #4c6daf;
+}
+
+/* Responsividad para dispositivos móviles */
+@media (max-width: 768px) {
+  .board {
+    flex-direction: column;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .column {
+    width: 100%;
+  }
+
+  .column h2 {
+    font-size: 1.1em;
+  }
+
+  .new-card-input {
+    width: 50%;
+  }
+
+  .add-card-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+
+  .modal {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-card-input {
+    width: 60%;
+  }
+
+  .column h2 {
+    font-size: 1em;
+  }
+
+  .add-card-btn {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .card textarea {
+    font-size: 14px;
+  }
+
+  .modal {
+    width: 95%;
+  }
 }
