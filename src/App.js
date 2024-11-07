@@ -151,7 +151,7 @@ const App = () => {
                           {...provided.dragHandleProps}
                           style={{
                             ...provided.draggableProps.style,
-                            backgroundColor: 'white',
+                            backgroundColor: '#70b1f3',
                             marginBottom: '8px',
                             borderRadius: '4px',
                             padding: '10px',
@@ -159,7 +159,7 @@ const App = () => {
                             opacity: provided.isDragging ? 0.7 : 1,
                           }}
                         >
-                          <div className="card-header" style={{ backgroundColor: '#293972', color: 'white', padding: '5px', borderRadius: '4px' }}>
+                          <div className="card-header" style={{ backgroundColor: '#114d8a', color: 'white', padding: '5px', borderRadius: '4px' }}>
                             <input
                               type="text"
                               value={card.title}
@@ -178,7 +178,7 @@ const App = () => {
                             value={card.description}
                             onClick={() => openModal(card.id, card.description)} // Abre el modal para editar
                             rows="4"
-                            style={{ width: '100%', marginTop: '5px' }}
+                            style={{ width: '97%', marginTop: '5px' }}
                           />
                           <button
                             className="delete-card-btn"
