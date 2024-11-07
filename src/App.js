@@ -136,7 +136,7 @@ const App = () => {
             <Droppable key={status} droppableId={status}>
               {(provided) => (
                 <div
-                  className="column"
+                  className={`column column-${status}`}
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -155,7 +155,7 @@ const App = () => {
                             marginBottom: '8px',
                             borderRadius: '4px',
                             padding: '10px',
-                            boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
+                            boxShadow: '2px 4px 15px rgba(0, 0, 0, 0.6)',
                             opacity: provided.isDragging ? 0.7 : 1,
                           }}
                         >

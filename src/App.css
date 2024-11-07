@@ -48,14 +48,32 @@
 
 .column h2 {
   text-align: center;
-  color: #333;
   margin-bottom: 15px;
-  background-color: #bedcfa;
   padding-top: 5px;
   padding-bottom: 5px;
   margin-top: 2px;
+  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
 }
+
+/* Estilo para la cabecera de la columna "Pendientes" */
+.column-pendientes h2 {
+  background-color: #f8d7da; /* Color de fondo para pendientes */
+  color: #721c24; /* Color del texto */
+}
+
+/* Estilo para la cabecera de la columna "En Ejecución" */
+.column-enEjecucion h2 {
+  background-color: #fff3cd; /* Color de fondo para en ejecución */
+  color: #856404; /* Color del texto */
+}
+
+/* Estilo para la cabecera de la columna "Finalizadas" */
+.column-finalizadas h2 {
+  background-color: #d4edda; /* Color de fondo para finalizadas */
+  color: #155724; /* Color del texto */
+}
+
 
 /* Estilo para las tarjetas */
 .card {
@@ -63,7 +81,7 @@
   border-radius: 4px;
   padding: 10px;
   margin-bottom: 8px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+ box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
   transition: opacity 0.3s ease;
 }
 
