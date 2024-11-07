@@ -136,8 +136,8 @@ const App = () => {
                     {status === 'pendientes'
                       ? 'Pendientes'
                       : status === 'enEjecucion'
-                      ? 'En Ejecución'
-                      : 'Finalizadas'}
+                        ? 'En Ejecución'
+                        : 'Finalizadas'}
                   </h2>
                   {data[status].map((card, index) => (
                     <Draggable key={card.id} draggableId={card.id} index={index}>
