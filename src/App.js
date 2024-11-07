@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'; 
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Estilos de Quill para el editor
 import './App.css';
 
 const loadDataFromLocalStorage = () => {
@@ -28,20 +30,17 @@ const saveDataToLocalStorage = (data) => {
 const App = () => {
   const [data, setData] = useState(loadDataFromLocalStorage);
   const [newCardTitle, setNewCardTitle] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
-  const [modalCardId, setModalCardId] = useState(null); // ID de la tarjeta seleccionada para editar
-  const [modalDescription, setModalDescription] = useState(''); // Descripción para el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalCardId, setModalCardId] = useState(null);
+  const [modalDescription, setModalDescription] = useState('');
 
-  // Manejo de la acción de finalizar el arrastre de una tarjeta
   const handleDragEnd = (result) => {
     const { destination, source } = result;
-    if (!destination) return; // Si no se soltó en ningún contenedor, no hacer nada
+    if (!destination) return;
 
-    // Copiar las listas de origen y destino
     const sourceList = data[source.droppableId];
     const destinationList = data[destination.droppableId];
-    
-    // Eliminar la tarjeta de la lista de origen y añadirla a la lista de destino
+
     const [movedCard] = sourceList.splice(source.index, 1);
     destinationList.splice(destination.index, 0, movedCard);
 
@@ -51,36 +50,31 @@ const App = () => {
       [destination.droppableId]: destinationList,
     };
 
-    // Actualizar el estado y guardar en localStorage
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
   };
 
-  // Manejo de la edición de la descripción de la tarjeta
-  const handleDescriptionChange = (cardId, status, newDescription) => {
+  const handleDescriptionChange = (cardId, status, newDescriptionHTML) => {
     const updatedData = { ...data };
     updatedData[status] = updatedData[status].map((card) =>
-      card.id === cardId ? { ...card, description: newDescription } : card
+      card.id === cardId ? { ...card, description: newDescriptionHTML } : card
     );
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
   };
 
-  // Abrir el modal para editar la descripción de la tarjeta
   const openModal = (cardId, description) => {
     setModalCardId(cardId);
-    setModalDescription(description);
+    setModalDescription(description || '');
     setIsModalOpen(true);
   };
 
-  // Cerrar el modal
   const closeModal = () => {
     setIsModalOpen(false);
     setModalCardId(null);
     setModalDescription('');
   };
 
-  // Guardar la descripción editada
   const saveDescription = () => {
     const status = Object.keys(data).find((status) =>
       data[status].some((card) => card.id === modalCardId)
@@ -89,9 +83,8 @@ const App = () => {
     closeModal();
   };
 
-  // Agregar una nueva tarjeta
   const handleAddCard = (status) => {
-    if (!newCardTitle.trim()) return; // Evitar agregar tarjetas sin título
+    if (!newCardTitle.trim()) return;
     const newCard = {
       id: Date.now().toString(),
       title: newCardTitle,
@@ -101,10 +94,9 @@ const App = () => {
     updatedData[status].push(newCard);
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
-    setNewCardTitle(''); // Limpiar el input de título después de agregar
+    setNewCardTitle('');
   };
 
-  // Eliminar una tarjeta
   const handleDeleteCard = (cardId, status) => {
     const updatedData = { ...data };
     updatedData[status] = updatedData[status].filter((card) => card.id !== cardId);
@@ -124,7 +116,7 @@ const App = () => {
         />
         <button
           className="add-card-btn"
-          onClick={() => handleAddCard('pendientes')} // Puedes cambiar la categoría según el caso
+          onClick={() => handleAddCard('pendientes')}
         >
           Añadir Nuevo Proyecto
         </button>
@@ -140,7 +132,13 @@ const App = () => {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  <h2>{status === 'pendientes' ? 'Pendientes' : status === 'enEjecucion' ? 'En Ejecución' : 'Finalizadas'}</h2>
+                  <h2>
+                    {status === 'pendientes'
+                      ? 'Pendientes'
+                      : status === 'enEjecucion'
+                      ? 'En Ejecución'
+                      : 'Finalizadas'}
+                  </h2>
                   {data[status].map((card, index) => (
                     <Draggable key={card.id} draggableId={card.id} index={index}>
                       {(provided) => (
@@ -149,17 +147,11 @@ const App = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            backgroundColor: '#70b1f3',
-                            marginBottom: '8px',
-                            borderRadius: '4px',
-                            padding: '10px',
-                            boxShadow: '2px 4px 15px rgba(0, 0, 0, 0.6)',
-                            opacity: provided.isDragging ? 0.7 : 1,
-                          }}
                         >
-                          <div className="card-header" style={{ backgroundColor: '#114d8a', color: 'white', padding: '5px', borderRadius: '4px' }}>
+                          <div
+                            className="card-header"
+                            style={{ backgroundColor: '#114d8a', color: 'white' }}
+                          >
                             <input
                               type="text"
                               value={card.title}
@@ -174,11 +166,10 @@ const App = () => {
                               className="card-title"
                             />
                           </div>
-                          <textarea
-                            value={card.description}
-                            onClick={() => openModal(card.id, card.description)} // Abre el modal para editar
-                            rows="4"
-                            style={{ width: '97%', marginTop: '5px' }}
+                          <div
+                            className="card-description"
+                            dangerouslySetInnerHTML={{ __html: card.description }}
+                            onClick={() => openModal(card.id, card.description)}
                           />
                           <button
                             className="delete-card-btn"
@@ -203,10 +194,10 @@ const App = () => {
         <div className="modal-overlay">
           <div className="modal">
             <h2>Editar Descripción</h2>
-            <textarea
+            <ReactQuill
               value={modalDescription}
-              onChange={(e) => setModalDescription(e.target.value)}
-              rows="6"
+              onChange={setModalDescription}
+              theme="snow"
               style={{ width: '100%', marginTop: '10px' }}
             />
             <div className="modal-actions">
