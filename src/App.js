@@ -167,7 +167,9 @@ const App = () => {
                             />
                           </div>
                           <div
+                            type="text"
                             className="card-description"
+                            placeholder="Descripción aqui..."
                             dangerouslySetInnerHTML={{ __html: card.description }}
                             onClick={() => openModal(card.id, card.description)}
                           />

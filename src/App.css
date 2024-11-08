@@ -110,6 +110,12 @@
   outline: none;
 }
 
+.card-description {
+  min-height: 50px;
+  color: black;
+  background-color: rgb(251, 245, 237);
+}
+
 .card textarea {
   width: 100%;
   min-height: 100px;
