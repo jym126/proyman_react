@@ -1,14 +1,23 @@
 /* Estilo para la barra superior */
-.header {
+/* .header {
   display: flex;
-  position: fixed;       /* Fija el header en la parte superior */
-  top: 0;                /* Lo coloca en la parte superior de la pantalla */
+  position: fixed;
+  top: 0; 
   left: 0;
   right: 0;
-  z-index: 1000;         /* Asegura que el header quede por encima del contenido */
-  background-color: #114d8a; /* Puedes ajustar el color de fondo */
-  padding: 10px 20px;    /* Ajusta el padding si es necesario */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega sombra para mejor visibilidad */
+  z-index: 1000;
+  background-color: #114d8a;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+} */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #114d8a;
+  color: white;
+  margin-bottom: 20px;
 }
 
 .title {
@@ -57,17 +66,26 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* .column h2 {
+  position: sticky;
+  top: 60px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 18px;
+  z-index: 2;
+  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
+  border-radius: 5px;
+} */
+
 .column h2 {
-  position: sticky;  /* Hace que el título se quede pegado en la parte superior */
-  top: 60px;          /* Ajusta este valor a la altura del header */
-  background-color: #f1f1f1;  /* Fondo del título para destacarlo */
-  padding: 10px;      /* Ajusta el padding si es necesario */
-  font-size: 18px;    /* Ajusta el tamaño de la fuente si es necesario */
-  z-index: 2;         /* Asegura que se mantenga por encima del contenido cuando se desplace */
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 2px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
 }
-
 /* Estilo para la cabecera de la columna "Pendientes" */
 .column-pendientes h2 {
   background-color: #f8d7da;
