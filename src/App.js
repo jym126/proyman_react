@@ -1,49 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Estilos de Quill para el editor
+import 'react-quill/dist/quill.snow.css';
 import './App.css';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
+const API_URL = 'http://localhost:3600/projects';
+
+// Cargar datos desde localStorage
 const loadDataFromLocalStorage = () => {
   const storedData = localStorage.getItem('proymanData');
-  if (storedData) {
-    return JSON.parse(storedData);
-  } else {
-    return {
-      pendientes: [
-        { id: '1', title: 'Proyecto 1', description: 'Descripción del proyecto 1' }
-      ],
-      enEjecucion: [
-        { id: '2', title: 'Proyecto 2', description: 'Descripción del proyecto 2' }
-      ],
-      finalizadas: [
-        { id: '3', title: 'Proyecto 3', description: 'Descripción del proyecto 3' }
-      ],
-    };
-  }
+  return storedData ? JSON.parse(storedData) : {};
 };
 
+// Guardar datos en localStorage
 const saveDataToLocalStorage = (data) => {
   localStorage.setItem('proymanData', JSON.stringify(data));
 };
 
 const App = () => {
-  const [data, setData] = useState(loadDataFromLocalStorage);
+  const [data, setData] = useState(loadDataFromLocalStorage());
   const [newCardTitle, setNewCardTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalCardId, setModalCardId] = useState(null);
   const [modalDescription, setModalDescription] = useState('');
 
-  const handleDragEnd = (result) => {
+  useEffect(() => {
+    // Cargar datos desde MongoDB al inicio
+    axios.get(API_URL).then((response) => {
+      const mongoData = {
+        pendientes: response.data.filter((proj) => proj.status === 'pendientes'),
+        enEjecucion: response.data.filter((proj) => proj.status === 'enEjecucion'),
+        finalizadas: response.data.filter((proj) => proj.status === 'finalizadas'),
+      };
+      setData(mongoData);
+      saveDataToLocalStorage(mongoData);
+    });
+  }, []);
+
+  const handleDragEnd = async (result) => {
     const { destination, source } = result;
     if (!destination) return;
 
     const sourceList = data[source.droppableId];
     const destinationList = data[destination.droppableId];
-
     const [movedCard] = sourceList.splice(source.index, 1);
     destinationList.splice(destination.index, 0, movedCard);
+    movedCard.status = destination.droppableId;
 
     const updatedData = {
       ...data,
@@ -53,15 +57,48 @@ const App = () => {
 
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
+    await axios.put(`${API_URL}/${movedCard._id}`, movedCard);
   };
 
-  const handleDescriptionChange = (cardId, status, newDescriptionHTML) => {
-    const updatedData = { ...data };
-    updatedData[status] = updatedData[status].map((card) =>
-      card.id === cardId ? { ...card, description: newDescriptionHTML } : card
-    );
+  const handleAddCard = async (status) => {
+    if (!newCardTitle.trim()) return;
+    const newCard = { title: newCardTitle, description: '', status };
+
+    const response = await axios.post(API_URL, newCard);
+    const cardWithId = { ...newCard, _id: response.data._id }; // Incluye el _id devuelto por la API
+
+    const updatedData = { ...data, [status]: [...data[status], cardWithId] };
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
+    setNewCardTitle('');
+  };
+
+  const handleDeleteCard = async (cardId, status) => {
+    try {
+      const result = await Swal.fire({
+        title: '¿Seguro que desea borrar este proyecto?',
+        text: 'Esta acción no se puede revertir!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí',
+      });
+
+      if (result.isConfirmed) {
+        await axios.delete(`${API_URL}/${cardId}`);
+        const updatedData = {
+          ...data,
+          [status]: data[status].filter((card) => card._id !== cardId) // Asegúrate de usar _id
+        };
+        setData(updatedData);
+        saveDataToLocalStorage(updatedData);
+        Swal.fire('Borrado!', 'El proyecto ha sido eliminado.', 'success');
+      }
+    } catch (error) {
+      console.error("Error eliminando el proyecto:", error);
+      Swal.fire('Error', 'Ocurrió un problema al intentar eliminar el proyecto.', 'error');
+    }
   };
 
   const openModal = (cardId, description) => {
@@ -76,50 +113,15 @@ const App = () => {
     setModalDescription('');
   };
 
-  const saveDescription = () => {
-    const status = Object.keys(data).find((status) =>
-      data[status].some((card) => card.id === modalCardId)
-    );
-    handleDescriptionChange(modalCardId, status, modalDescription);
-    closeModal();
-  };
-
-  const handleAddCard = (status) => {
-    if (!newCardTitle.trim()) return;
-    const newCard = {
-      id: Date.now().toString(),
-      title: newCardTitle,
-      description: '',
-    };
+  const saveDescription = async () => {
+    const status = Object.keys(data).find((key) => data[key].some((card) => card._id === modalCardId));
     const updatedData = { ...data };
-    updatedData[status].push(newCard);
+    const card = updatedData[status].find((card) => card._id === modalCardId);
+    card.description = modalDescription;
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
-    setNewCardTitle('');
-  };
-
-  const handleDeleteCard = (cardId, status) => {
-    Swal.fire({
-      title: "¿Seguro que desea borrar este proyecto?",
-      text: "Esta acción no se puede revertir!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const updatedData = { ...data };
-        updatedData[status] = updatedData[status].filter((card) => card.id !== cardId);
-        setData(updatedData);
-        saveDataToLocalStorage(updatedData);
-        Swal.fire({
-          title: "Borrado!",
-          text: "El proyecto ha sido eliminado.",
-          icon: "success"
-        });
-      }
-    });
+    closeModal();
+    await axios.put(`${API_URL}/${modalCardId}`, card);
   };
 
   return (
@@ -158,7 +160,7 @@ const App = () => {
                         : 'Finalizadas'}
                   </h2>
                   {data[status].map((card, index) => (
-                    <Draggable key={card.id} draggableId={card.id} index={index}>
+                    <Draggable key={card._id} draggableId={card._id} index={index}>
                       {(provided) => (
                         <div
                           className="card"
@@ -176,7 +178,7 @@ const App = () => {
                               onChange={(e) => {
                                 const updatedData = { ...data };
                                 updatedData[status] = updatedData[status].map((c) =>
-                                  c.id === card.id ? { ...c, title: e.target.value } : c
+                                  c._id === card._id ? { ...c, title: e.target.value } : c
                                 );
                                 setData(updatedData);
                                 saveDataToLocalStorage(updatedData);
@@ -189,11 +191,11 @@ const App = () => {
                             className="card-description"
                             placeholder="Descripción aqui..."
                             dangerouslySetInnerHTML={{ __html: card.description }}
-                            onClick={() => openModal(card.id, card.description)}
+                            onClick={() => openModal(card._id, card.description)}
                           />
                           <button
                             className="delete-card-btn"
-                            onClick={() => handleDeleteCard(card.id, status)}
+                            onClick={() => handleDeleteCard(card._id, status)}
                           >
                             Eliminar
                           </button>
@@ -209,7 +211,6 @@ const App = () => {
         </div>
       </DragDropContext>
 
-      {/* Modal para editar la descripción de la tarjeta */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -221,8 +222,12 @@ const App = () => {
               style={{ width: '100%', marginTop: '10px' }}
             />
             <div className="modal-actions">
-              <button className="modal-btn" onClick={saveDescription}>Guardar</button>
-              <button className="modal-btn" onClick={closeModal}>Cerrar</button>
+              <button className="modal-btn" onClick={saveDescription}>
+                Guardar
+              </button>
+              <button className="modal-btn" onClick={closeModal}>
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
