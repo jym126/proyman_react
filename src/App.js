@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Estilos de Quill para el editor
 import './App.css';
+import Swal from 'sweetalert2';
 
 const loadDataFromLocalStorage = () => {
   const storedData = localStorage.getItem('proymanData');
@@ -98,10 +99,27 @@ const App = () => {
   };
 
   const handleDeleteCard = (cardId, status) => {
-    const updatedData = { ...data };
-    updatedData[status] = updatedData[status].filter((card) => card.id !== cardId);
-    setData(updatedData);
-    saveDataToLocalStorage(updatedData);
+    Swal.fire({
+      title: "¿Seguro que desea borrar este proyecto?",
+      text: "Esta acción no se puede revertir!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedData = { ...data };
+        updatedData[status] = updatedData[status].filter((card) => card.id !== cardId);
+        setData(updatedData);
+        saveDataToLocalStorage(updatedData);
+        Swal.fire({
+          title: "Borrado!",
+          text: "El proyecto ha sido eliminado.",
+          icon: "success"
+        });
+      }
+    });
   };
 
   return (
@@ -167,7 +185,9 @@ const App = () => {
                             />
                           </div>
                           <div
+                            type="text"
                             className="card-description"
+                            placeholder="Descripción aqui..."
                             dangerouslySetInnerHTML={{ __html: card.description }}
                             onClick={() => openModal(card.id, card.description)}
                           />
