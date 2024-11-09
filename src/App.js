@@ -121,7 +121,11 @@ const App = () => {
     setData(updatedData);
     saveDataToLocalStorage(updatedData);
     closeModal();
-    await axios.put(`${API_URL}/${modalCardId}`, card);
+    try {
+      await axios.put(`${API_URL}/${modalCardId}`, card);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
