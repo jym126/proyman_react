@@ -126,6 +126,7 @@
   min-height: 50px;
   color: black;
   background-color: rgb(251, 245, 237);
+  overflow: hidden;
 }
 
 .card textarea {
@@ -241,6 +242,7 @@ and (max-width: 1024px)
 
   .column h2 {
     font-size: 1.1em;
+    top: 70px;
   }
 
   .new-card-input {
@@ -276,6 +278,7 @@ and (max-width: 1024px)
 
   .column h2 {
     font-size: 1em;
+    top: 80px;
   }
 
   .add-card-btn {
