@@ -1,16 +1,26 @@
 /* Estilo para la barra superior */
 .header {
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: #114d8a;
-  color: white;
-  align-items: center;
-  margin-bottom: 20px;
+  position: fixed;       /* Fija el header en la parte superior */
+  top: 0;                /* Lo coloca en la parte superior de la pantalla */
+  left: 0;
+  right: 0;
+  z-index: 100;         /* Asegura que el header quede por encima del contenido */
+  background-color: #114d8a; /* Puedes ajustar el color de fondo */
+  padding: 10px 20px;    /* Ajusta el padding si es necesario */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega sombra para mejor visibilidad */
+}
+
+.title {
+  max-height: 20px;
+  padding: 0;
+  margin: 0 0 0 20%;
+  color: #fff3cd;
 }
 
 .new-card-input {
   padding: 8px;
+  margin-right: 10px;
   width: 20%;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -34,6 +44,7 @@
 .board {
   display: flex;
   justify-content: space-between;
+  margin-top: 30px;
   padding: 20px;
   gap: 20px;
 }
@@ -47,11 +58,12 @@
 }
 
 .column h2 {
-  text-align: center;
-  margin-bottom: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin-top: 2px;
+  position: sticky;  /* Hace que el título se quede pegado en la parte superior */
+  top: 60px;          /* Ajusta este valor a la altura del header */
+  background-color: #f1f1f1;  /* Fondo del título para destacarlo */
+  padding: 10px;      /* Ajusta el padding si es necesario */
+  font-size: 18px;    /* Ajusta el tamaño de la fuente si es necesario */
+  z-index: 1;         /* Asegura que se mantenga por encima del contenido cuando se desplace */
   box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
 }
@@ -200,10 +212,25 @@
   background-color: #4c6daf;
 }
 
+/*Vista tabletas*/
+@media only screen
+and (min-width: 768px)
+and (max-width: 1024px)
+{
+  .title {
+    max-height: 10px;
+    font-size: 30px;
+    padding: 0;
+    margin: 0 0 0 10%;
+    color: #fff3cd;
+  }
+}
+
 /* Responsividad para dispositivos móviles */
 @media (max-width: 768px) {
   .board {
     flex-direction: column;
+    margin-top: 50px;
     padding: 10px;
     gap: 15px;
   }
@@ -231,6 +258,14 @@
 
   .modal {
     width: 90%;
+  }
+
+  .title {
+    max-height: 10px;
+    font-size: 20px;
+    padding: 0;
+    margin: 0 0 0 10%;
+    color: #fff3cd;
   }
 }
 

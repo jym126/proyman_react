@@ -140,6 +140,7 @@ const App = () => {
         >
           Añadir Nuevo Proyecto
         </button>
+        <h1 className="title">Gestion de proyectos</h1>
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
