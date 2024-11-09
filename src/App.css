@@ -1,5 +1,5 @@
 /* Estilo para la barra superior */
-/* .header {
+.header {
   display: flex;
   position: fixed;
   top: 0; 
@@ -9,15 +9,6 @@
   background-color: #114d8a;
   padding: 10px 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-} */
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: #114d8a;
-  color: white;
-  margin-bottom: 20px;
 }
 
 .title {
@@ -66,7 +57,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* .column h2 {
+.column h2 {
   position: sticky;
   top: 60px;
   background-color: #f1f1f1;
@@ -75,17 +66,8 @@
   z-index: 2;
   box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
-} */
-
-.column h2 {
-  text-align: center;
-  margin-bottom: 15px;
-  margin-top: 2px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
-  border-radius: 5px;
 }
+
 /* Estilo para la cabecera de la columna "Pendientes" */
 .column-pendientes h2 {
   background-color: #f8d7da;
