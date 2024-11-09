@@ -227,7 +227,7 @@ and (max-width: 1024px)
 }
 
 /* Responsividad para dispositivos móviles */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .board {
     flex-direction: column;
     margin-top: 50px;
@@ -269,7 +269,7 @@ and (max-width: 1024px)
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .new-card-input {
     width: 60%;
   }
