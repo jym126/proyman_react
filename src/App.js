@@ -6,7 +6,7 @@ import './App.css';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3600/projects';
+const API_URL = 'https://proyman.onrender.com/projects';
 
 // Cargar datos desde localStorage
 const loadDataFromLocalStorage = () => {
