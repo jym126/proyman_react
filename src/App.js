@@ -61,7 +61,16 @@ const App = () => {
   };
 
   const handleAddCard = async (status) => {
-    if (!newCardTitle.trim()) return;
+    if (!newCardTitle.trim())
+      {
+        Swal.fire({
+          title: "Nombre de proyecto",
+          text: "Debe ingresar un nombre para crear un proyecto!",
+          icon: "warning"
+        }
+        )
+        return;
+      } 
     const newCard = { title: newCardTitle, description: '', status };
 
     const response = await axios.post(API_URL, newCard);
@@ -133,7 +142,7 @@ const App = () => {
       <div className="header">
         <input
           type="text"
-          placeholder="Nuevo título"
+          placeholder="ID/Nombre del proyecto"
           value={newCardTitle}
           onChange={(e) => setNewCardTitle(e.target.value)}
           className="new-card-input"
