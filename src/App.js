@@ -61,20 +61,18 @@ const App = () => {
   };
 
   const handleAddCard = async (status) => {
-    if (!newCardTitle.trim())
-      {
-        Swal.fire({
-          title: "Nombre de proyecto",
-          text: "Debe ingresar un nombre para crear un proyecto!",
-          icon: "warning"
-        }
-        )
-        return;
-      } 
+    if (!newCardTitle.trim()) {
+      Swal.fire({
+        title: "Nombre de proyecto",
+        text: "Debe ingresar un nombre para crear un proyecto!",
+        icon: "warning"
+      });
+      return;
+    } 
     const newCard = { title: newCardTitle, description: '', status };
 
     const response = await axios.post(API_URL, newCard);
-    const cardWithId = { ...newCard, _id: response.data._id }; // Incluye el _id devuelto por la API
+    const cardWithId = { ...newCard, _id: response.data._id };
 
     const updatedData = { ...data, [status]: [...data[status], cardWithId] };
     setData(updatedData);
@@ -98,7 +96,7 @@ const App = () => {
         await axios.delete(`${API_URL}/${cardId}`);
         const updatedData = {
           ...data,
-          [status]: data[status].filter((card) => card._id !== cardId) // Asegúrate de usar _id
+          [status]: data[status].filter((card) => card._id !== cardId)
         };
         setData(updatedData);
         saveDataToLocalStorage(updatedData);
@@ -133,7 +131,7 @@ const App = () => {
     try {
       await axios.put(`${API_URL}/${modalCardId}`, card);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -229,12 +227,14 @@ const App = () => {
         <div className="modal-overlay">
           <div className="modal">
             <h2>Editar Descripción</h2>
-            <ReactQuill
-              value={modalDescription}
-              onChange={setModalDescription}
-              theme="snow"
-              style={{ width: '100%', marginTop: '10px' }}
-            />
+            <div className="modal-content">
+              <ReactQuill
+                value={modalDescription}
+                onChange={setModalDescription}
+                theme="snow"
+                style={{ width: '100%' }}
+              />
+            </div>
             <div className="modal-actions">
               <button className="modal-btn" onClick={saveDescription}>
                 Guardar
