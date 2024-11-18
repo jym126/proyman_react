@@ -140,6 +140,7 @@ const App = () => {
       <div className="header">
         <input
           type="text"
+          id='productName'
           placeholder="ID/Nombre del proyecto"
           value={newCardTitle}
           onChange={(e) => setNewCardTitle(e.target.value)}
@@ -195,6 +196,7 @@ const App = () => {
                                 setData(updatedData);
                                 saveDataToLocalStorage(updatedData);
                               }}
+                              id={card._id}
                               className="card-title"
                             />
                           </div>
